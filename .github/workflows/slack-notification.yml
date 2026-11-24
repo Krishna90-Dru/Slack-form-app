@@ -1,0 +1,25 @@
+name: Send GitHub Issues to Slack
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  notify-slack:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send issue details to Slack
+        uses: slackapi/slack-github-action@v4.0.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: "${{ secrets.SLACK_CHANNEL_ID }}"
+            text: |
+              🚨 New GitHub Issue
+              Issue: ${{ github.event.issue.title }}
+              Issue #: ${{ github.event.issue.number }}
+              Created by: ${{ github.event.issue.user.login }}
+              Repository: ${{ github.repository }}
+              View Issue: ${{ github.event.issue.html_url }}
